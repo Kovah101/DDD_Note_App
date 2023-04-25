@@ -9,7 +9,7 @@ data class Note(
     val isFavorite: Boolean,
     val isChecklist: Boolean,
     val checklist: List<ChecklistItem>,
-    val mediaUri: String?
+    val imageUri: String?
 ) {
     data class ChecklistItem(
         val id: Int,
