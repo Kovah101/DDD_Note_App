@@ -54,9 +54,10 @@ dependencies {
     def nav_version = '2.5.3'
     def room_version = '2.5.1'
     def koin_version = '3.4.0'
+    implementation project(':presentation')
 
-    implementation project(':ui')
     implementation project(':data')
+    implementation project(':domain')
 
     // Compose
     implementation "androidx.compose.ui:ui:$compose_version"
