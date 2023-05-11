@@ -16,4 +16,18 @@ data class Note(
         val text: String,
         val isChecked: Boolean
     )
+
+    companion object {
+        fun empty() = Note(
+            id = 0,
+            title = "",
+            content = "",
+            createdAt = 0,
+            updatedAt = 0,
+            isFavorite = false,
+            isChecklist = false,
+            checklist = emptyList(),
+            imageUri = null
+        )
+    }
 }
