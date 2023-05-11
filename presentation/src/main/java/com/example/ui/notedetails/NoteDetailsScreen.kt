@@ -26,11 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NoteDetailScreen(viewModel: NoteDetailViewModel) {
+fun NoteDetailScreen(viewModel: NoteDetailViewModel = koinViewModel()) {
     val note by viewModel.note.collectAsState()
 
     Scaffold(

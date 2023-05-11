@@ -24,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.domain.models.Note
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteListScreen(viewModel: NoteListViewModel) {
+fun NoteListScreen(viewModel: NoteListViewModel = koinViewModel()) {
     val notes by viewModel.notes.collectAsState()
 
     Scaffold(
