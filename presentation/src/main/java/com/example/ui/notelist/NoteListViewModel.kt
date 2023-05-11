@@ -2,13 +2,18 @@ package com.example.ui.notelist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.domain.models.Note
 import com.example.domain.repositories.NoteRepository
+import com.example.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class NoteListViewModel(private val noteRepository: NoteRepository) : ViewModel() {
+class NoteListViewModel(
+    private val noteRepository: NoteRepository,
+    private val navController: NavController
+) : ViewModel() {
 
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes: StateFlow<List<Note>> = _notes
@@ -18,11 +23,11 @@ class NoteListViewModel(private val noteRepository: NoteRepository) : ViewModel(
     }
 
     fun onNoteSelected(noteId: Int) {
-        // navigate to detail screen
+        navController.navigate(Screen.NoteDetail.route + "/$noteId")
     }
 
     fun onAddNoteClicked() {
-        // navigate to detail screen with new note
+        navController.navigate(Screen.NoteDetail.route + "/0")
     }
 
     private fun loadNotes() {

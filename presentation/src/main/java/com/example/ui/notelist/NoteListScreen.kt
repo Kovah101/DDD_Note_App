@@ -23,13 +23,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.domain.models.Note
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteListScreen(viewModel: NoteListViewModel = koinViewModel()) {
+fun NoteListScreen(
+    viewModel: NoteListViewModel = koinViewModel(),
+    navController: NavController = rememberNavController()
+) {
     val notes by viewModel.notes.collectAsState()
 
     Scaffold(

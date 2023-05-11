@@ -1,5 +1,6 @@
 package com.example.dddnoteapp.di
 
+import androidx.navigation.NavController
 import androidx.room.Room
 import com.example.data.daos.NoteDao
 import com.example.data.database.NoteDatabase
@@ -12,6 +13,7 @@ import com.example.ui.notelist.NoteListScreen
 import com.example.ui.notelist.NoteListViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.viewModel
 import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModel
 
@@ -39,8 +41,11 @@ val domainModule = module {
 }
 
 val presentationModule = module {
-    viewModel { NoteListViewModel(get()) }
-    viewModel { NoteDetailViewModel(get()) }
-    //factory { NoteListScreen(getViewModel<NoteListViewModel>()) }
-    //factory { NoteDetailScreen((get()) }
+    viewModel { (navController: NavController) ->
+        NoteListViewModel(get(), navController)
+    }
+    viewModel { (navController : NavController) ->
+        NoteDetailViewModel(get(), navController)
+    }
+
 }
