@@ -26,7 +26,7 @@ fun NoteApp(notesViewModel: NoteListViewModel) {
             arguments = listOf(navArgument("noteId") { type = NavType.IntType })
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getInt("noteId") ?: 0
-            val viewModel = remember { NoteDetailViewModel(get(), navController) }
+            val viewModel : NoteDetailViewModel = get()
             viewModel.setNoteId(noteId)
             NoteDetailScreen(viewModel)
         }

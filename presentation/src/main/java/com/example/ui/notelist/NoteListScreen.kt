@@ -32,8 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteListScreen(
-    viewModel: NoteListViewModel = koinViewModel(),
-    navController: NavController = rememberNavController()
+    viewModel: NoteListViewModel = koinViewModel()
 ) {
     val notes by viewModel.notes.collectAsState()
 
