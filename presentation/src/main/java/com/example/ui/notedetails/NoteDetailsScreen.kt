@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.domain.models.Note
 import org.koin.androidx.compose.koinViewModel
 
@@ -101,7 +102,7 @@ fun NoteDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        painter = rememberImagePainter(note.imageUri),
+                        painter = rememberAsyncImagePainter(note.imageUri),
                         contentDescription = "Note Image"
                     )
                 }

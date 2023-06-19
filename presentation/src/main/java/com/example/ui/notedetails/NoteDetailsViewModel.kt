@@ -1,5 +1,6 @@
 package com.example.ui.notedetails
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -9,6 +10,7 @@ import com.example.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class NoteDetailViewModel(
     private val noteRepository: NoteRepository,
@@ -59,5 +61,39 @@ class NoteDetailViewModel(
                 }
             }
         }
+    }
+
+    fun onAddCheckboxItem() {
+        val newItem = Note.ChecklistItem(
+            id = generateRandomId(),
+            text = "",
+            isChecked = false
+        )
+        val updatedChecklist = _note.value.checklist.toMutableList()
+        updatedChecklist.add(newItem)
+        _note.value = _note.value.copy(checklist = updatedChecklist)
+    }
+
+    fun onCheckboxItemChanged(item: Note.ChecklistItem) {
+        val updatedChecklist = _note.value.checklist.map { checklistItem ->
+            if (checklistItem.id == item.id) {
+                checklistItem.copy(isChecked = item.isChecked)
+            } else {
+                checklistItem
+            }
+        }
+        _note.value = _note.value.copy(checklist = updatedChecklist)
+    }
+
+    fun onImageSelected(uri: Uri?) {
+        if (uri == null) return
+        val imagePath = uri.toString()
+        _note.value = _note.value.copy(imageUri = imagePath)
+    }
+
+    private fun generateRandomId(): Int {
+        val timestamp = System.currentTimeMillis()
+        val randomSuffix = Random.nextInt(1000)
+        return (timestamp + randomSuffix).toInt()
     }
 }

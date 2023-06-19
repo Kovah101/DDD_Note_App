@@ -14,7 +14,10 @@ import com.example.dddnoteapp.di.dataModule
 import com.example.dddnoteapp.di.domainModule
 import com.example.dddnoteapp.di.presentationModule
 import com.example.dddnoteapp.ui.theme.DDDNoteAppTheme
+import com.example.ui.navigation.NoteApp
+import com.example.ui.notelist.NoteListViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.compose.get
 import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +38,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Greeting("Android")
                 }
+
+                NoteApp(
+                    notesViewModel = NoteListViewModel(get(), get())
+                )
             }
         }
 
