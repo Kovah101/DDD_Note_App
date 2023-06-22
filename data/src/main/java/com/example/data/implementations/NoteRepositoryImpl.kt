@@ -30,7 +30,7 @@ class NoteRepositoryImpl (
         return noteDao.getNotes().map { noteMapper.toDomain(it) }
     }
 
-    override suspend fun getNoteById(id: Long): Note? {
+    override suspend fun getNoteById(id: Int): Note? {
         return noteDao.getNoteById(id)?.let { noteMapper.toDomain(it) }
     }
 }

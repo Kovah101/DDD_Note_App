@@ -8,5 +8,5 @@ interface NoteRepository {
     suspend fun delete(note: Note)
     suspend fun deleteAll()
     suspend fun getNotes(): List<Note>?
-    suspend fun getNoteById(id: Long): Note?
+    suspend fun getNoteById(id: Int): Note?
 }

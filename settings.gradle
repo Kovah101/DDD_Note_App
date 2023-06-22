@@ -16,4 +16,4 @@ rootProject.name = "DDD Note App"
 include ':app'
 include ':domain'
 include ':data'
-include ':ui'
+include ':presentation'
