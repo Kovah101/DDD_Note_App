@@ -22,6 +22,8 @@ class CheckModulesTest : KoinTest {
 
     @Test
     fun checkPresentationModules() {
-        presentationModule.verify()
+       // presentationModule.verify()
+        presentationModule.verify(extraTypes = listOf(com.example.domain.repositories.NoteRepository::class))
+
     }
 }

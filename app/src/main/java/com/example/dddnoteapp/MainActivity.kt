@@ -3,6 +3,7 @@ package com.example.dddnoteapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,33 +16,24 @@ import com.example.ui.navigation.NoteApp
 import com.example.ui.notedetails.NoteDetailViewModel
 import com.example.ui.notelist.NoteListViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.compose.get
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 
-class MainActivity : ComponentActivity(), KoinComponent {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        startKoin {
-//            androidContext(this@MainActivity)
-//            modules(appModules)
-//        }
 
         setContent {
             DDDNoteAppTheme {
                 val navController = rememberNavController()
-                val noteListViewModel: NoteListViewModel = viewModel()
-                val noteDetailViewModel: NoteDetailViewModel = viewModel()
 
                 NoteApp(
-                    notesViewModel = noteListViewModel,
-                    noteDetailViewModel = noteDetailViewModel,
+                    notesViewModel = NoteListViewModel(get()),
+                    noteDetailViewModel = NoteDetailViewModel(get()),
                     navController = navController
                 )
-
-//                NoteApp(
-//                    notesViewModel = NoteListViewModel(get(), get())
-//                )
             }
         }
     }

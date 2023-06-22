@@ -2,6 +2,7 @@ package com.example.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.domain.models.ChecklistItem
 import com.example.domain.models.Note
 
 @Entity(tableName = "notes")
@@ -13,7 +14,7 @@ data class NoteEntity(
     val updatedAt: Long,
     val isFavorite: Boolean,
     val isChecklist: Boolean,
-    val checklist: List<Note.ChecklistItem>,
+    val checklist: List<ChecklistItem>,
     val imageUri: String?
 
 )

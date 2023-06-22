@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -41,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.domain.models.ChecklistItem
 import com.example.domain.models.Note
 import com.example.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -74,8 +76,8 @@ fun NoteDetailScreen(
                 },
                 actions = {
                     IconButton(onClick = {
+                        viewModel.onSaveClicked()
                         navController.navigate(Screen.NoteList.route)
-                      //  viewModel.onSaveClicked()
                     }) {
                         Icon(Icons.Filled.Save, contentDescription = "Save")
                     }
@@ -83,7 +85,7 @@ fun NoteDetailScreen(
             )
         },
         content = {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(16.dp).padding(top = 64.dp)) {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = note.title,
@@ -131,7 +133,7 @@ fun NoteDetailScreen(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                      //  viewModel.onSaveClicked()
+                        viewModel.onSaveClicked()
                         navController.navigate(Screen.NoteList.route)
                     }
                 ) {
@@ -184,8 +186,8 @@ fun NoteDetailScreen(
 
 @Composable
 fun CheckboxList(
-    items: List<Note.ChecklistItem>,
-    onItemChanged: (Note.ChecklistItem) -> Unit
+    items: List<ChecklistItem>,
+    onItemChanged: (ChecklistItem) -> Unit
 ) {
     LazyColumn {
         items(items) { item ->

@@ -1,5 +1,7 @@
 package com.example.domain.models
 
+
+
 data class Note(
     val id: Int,
     val title: String,
@@ -11,11 +13,6 @@ data class Note(
     val checklist: List<ChecklistItem>,
     val imageUri: String?
 ) {
-    data class ChecklistItem(
-        val id: Int,
-        val text: String,
-        val isChecked: Boolean
-    )
 
     companion object {
         fun empty() = Note(
@@ -26,7 +23,7 @@ data class Note(
             updatedAt = 0,
             isFavorite = false,
             isChecklist = false,
-            checklist = emptyList(),
+            checklist = listOf(ChecklistItem.empty()),
             imageUri = null
         )
     }

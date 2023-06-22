@@ -3,18 +3,16 @@ package com.example.ui.notedetails
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
+import com.example.domain.models.ChecklistItem
 import com.example.domain.models.Note
 import com.example.domain.repositories.NoteRepository
-import com.example.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class NoteDetailViewModel(
-    private val noteRepository: NoteRepository,
-   // private val navController: NavController
+    private val noteRepository: NoteRepository
 ) : ViewModel() {
 
     private val _note = MutableStateFlow(Note.empty())
@@ -22,9 +20,9 @@ class NoteDetailViewModel(
 
     private var currentNoteId: Int = 0
 
-//    init {
-//        setNoteId(currentNoteId)
-//    }
+    init {
+        setNoteId(currentNoteId)
+    }
 
     fun onTitleChanged(title: String) {
         _note.value = _note.value.copy(title = title)
@@ -37,14 +35,12 @@ class NoteDetailViewModel(
     fun onSaveClicked() {
         viewModelScope.launch {
             noteRepository.add(_note.value)
-           // navController.navigate(Screen.NoteList.route)
         }
     }
 
     fun onDeleteClicked() {
         viewModelScope.launch {
             noteRepository.delete(_note.value)
-          //  navController.popBackStack()
         }
     }
 
@@ -64,7 +60,7 @@ class NoteDetailViewModel(
     }
 
     fun onAddCheckboxItem() {
-        val newItem = Note.ChecklistItem(
+        val newItem = ChecklistItem(
             id = generateRandomId(),
             text = "",
             isChecked = false
@@ -74,7 +70,7 @@ class NoteDetailViewModel(
         _note.value = _note.value.copy(checklist = updatedChecklist)
     }
 
-    fun onCheckboxItemChanged(item: Note.ChecklistItem) {
+    fun onCheckboxItemChanged(item: ChecklistItem) {
         val updatedChecklist = _note.value.checklist.map { checklistItem ->
             if (checklistItem.id == item.id) {
                 checklistItem.copy(isChecked = item.isChecked)
