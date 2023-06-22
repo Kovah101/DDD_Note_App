@@ -59,7 +59,7 @@ private fun NoteList(
     notes: List<Note>,
     onItemClick: (Int) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn (Modifier.padding(top = 60.dp)) {
         items(notes) { note ->
             NoteItem(note = note, onItemClick = onItemClick)
         }

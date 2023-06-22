@@ -4,6 +4,8 @@ import com.example.data.daos.NoteDao
 import com.example.data.mappers.NoteMapper
 import com.example.domain.models.Note
 import com.example.domain.repositories.NoteRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class NoteRepositoryImpl (
     private val noteDao: NoteDao,
@@ -26,8 +28,9 @@ class NoteRepositoryImpl (
         noteDao.deleteAll()
     }
 
-    override suspend fun getNotes(): List<Note>? {
-        return noteDao.getNotes().map { noteMapper.toDomain(it) }
+    override suspend fun getNotes(): Flow<List<Note>>  = flow {
+         noteDao.getNotes().map { noteMapper.toDomain(it)
+        }
     }
 
     override suspend fun getNoteById(id: Int): Note? {
