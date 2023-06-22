@@ -2,6 +2,8 @@ package com.example.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,21 +16,26 @@ import com.example.ui.notelist.NoteListViewModel
 import org.koin.androidx.compose.get
 
 @Composable
-fun NoteApp(notesViewModel: NoteListViewModel) {
-    val navController = rememberNavController()
+fun NoteApp(
+    notesViewModel: NoteListViewModel,
+    noteDetailViewModel: NoteDetailViewModel,
+    navController: NavHostController
+) {
+//    val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.NoteList.route) {
         composable(Screen.NoteList.route) {
-            NoteListScreen(notesViewModel)
+            NoteListScreen(notesViewModel, navController)
         }
         composable(
             Screen.NoteDetail.route + "/{noteId}",
             arguments = listOf(navArgument("noteId") { type = NavType.IntType })
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getInt("noteId") ?: 0
-            val viewModel : NoteDetailViewModel = get()
-            viewModel.setNoteId(noteId)
-            NoteDetailScreen(viewModel)
+           // val viewModel : NoteDetailViewModel = get()
+          //  viewModel.setNoteId(noteId)
+            noteDetailViewModel.setNoteId(noteId)
+            NoteDetailScreen(noteDetailViewModel, navController)
         }
     }
 }

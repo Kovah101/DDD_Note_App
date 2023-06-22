@@ -14,7 +14,7 @@ import kotlin.random.Random
 
 class NoteDetailViewModel(
     private val noteRepository: NoteRepository,
-    private val navController: NavController
+   // private val navController: NavController
 ) : ViewModel() {
 
     private val _note = MutableStateFlow(Note.empty())
@@ -22,9 +22,9 @@ class NoteDetailViewModel(
 
     private var currentNoteId: Int = 0
 
-    init {
-        setNoteId(currentNoteId)
-    }
+//    init {
+//        setNoteId(currentNoteId)
+//    }
 
     fun onTitleChanged(title: String) {
         _note.value = _note.value.copy(title = title)
@@ -37,14 +37,14 @@ class NoteDetailViewModel(
     fun onSaveClicked() {
         viewModelScope.launch {
             noteRepository.add(_note.value)
-            navController.navigate(Screen.NoteList.route)
+           // navController.navigate(Screen.NoteList.route)
         }
     }
 
     fun onDeleteClicked() {
         viewModelScope.launch {
             noteRepository.delete(_note.value)
-            navController.popBackStack()
+          //  navController.popBackStack()
         }
     }
 

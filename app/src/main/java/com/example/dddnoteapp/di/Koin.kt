@@ -31,9 +31,8 @@ val dataModule = module {
         val database = get<NoteDatabase>()
         database.noteDao()
     }
-    factory { get<NoteDatabase>().noteDao() }
     factory { NoteMapper() }
-    single<NoteRepository> { NoteRepositoryImpl(get(), get()) }
+    single<NoteRepository> { NoteRepositoryImpl(noteDao = get(), noteMapper = get()) }
 }
 
 val domainModule = module {
@@ -41,11 +40,9 @@ val domainModule = module {
 }
 
 val presentationModule = module {
-    viewModel { (navController: NavController) ->
-        NoteListViewModel(get(), navController)
-    }
-    viewModel { (navController : NavController) ->
-        NoteDetailViewModel(get(), navController)
-    }
+    viewModel { NoteListViewModel(noteRepository = get()) }
+    viewModel { NoteDetailViewModel(noteRepository = get()) }
 
 }
+
+val appModules = listOf(dataModule, domainModule, presentationModule)

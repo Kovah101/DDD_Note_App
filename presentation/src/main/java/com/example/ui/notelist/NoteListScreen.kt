@@ -26,13 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.domain.models.Note
+import com.example.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteListScreen(
-    viewModel: NoteListViewModel = koinViewModel()
+    viewModel: NoteListViewModel = koinViewModel(),
+    navController: NavController
 ) {
     val notes by viewModel.notes.collectAsState()
 
@@ -40,12 +42,12 @@ fun NoteListScreen(
         topBar = { TopAppBar(title = { Text("Notes") }) },
         content = {
             NoteList(notes) { noteId ->
-                viewModel.onNoteSelected(noteId)
+                navController.navigate(Screen.NoteDetail.route + "/$noteId")
             }
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.onAddNoteClicked() },
+                onClick = { navController.navigate(Screen.NoteDetail.route + "/0") },
                 content = { Icon(Icons.Filled.Add, contentDescription = "Add Note") }
             )
         }

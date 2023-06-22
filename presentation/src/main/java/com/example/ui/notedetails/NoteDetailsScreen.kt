@@ -39,8 +39,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.models.Note
+import com.example.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,6 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun NoteDetailScreen(
     viewModel: NoteDetailViewModel = koinViewModel(),
+    navController: NavController
 ) {
     val note by viewModel.note.collectAsState()
     val galleryLauncher: ActivityResultLauncher<String> = rememberLauncherForActivityResult(
@@ -62,12 +65,18 @@ fun NoteDetailScreen(
             TopAppBar(
                 title = { Text("Note Detail") },
                 navigationIcon = {
-                    IconButton(onClick = { viewModel.onBackClicked() }) {
+                    IconButton(onClick = {
+                        viewModel.onBackClicked()
+                        navController.popBackStack()
+                    }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.onSaveClicked() }) {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.NoteList.route)
+                      //  viewModel.onSaveClicked()
+                    }) {
                         Icon(Icons.Filled.Save, contentDescription = "Save")
                     }
                 }
@@ -121,7 +130,10 @@ fun NoteDetailScreen(
             if (note.id == 0) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { viewModel.onSaveClicked() }
+                    onClick = {
+                      //  viewModel.onSaveClicked()
+                        navController.navigate(Screen.NoteList.route)
+                    }
                 ) {
                     Text("Save")
                 }
@@ -133,7 +145,10 @@ fun NoteDetailScreen(
                             modifier = Modifier.fillMaxWidth().padding(8.dp)
                         ) {
                             IconButton(
-                                onClick = { viewModel.onDeleteClicked() },
+                                onClick = {
+                                    viewModel.onDeleteClicked()
+                                    navController.popBackStack()
+                                          },
                                 content = {
                                     Icon(
                                         Icons.Filled.Delete,

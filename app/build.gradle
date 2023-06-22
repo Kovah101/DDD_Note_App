@@ -54,8 +54,8 @@ dependencies {
     def nav_version = '2.5.3'
     def room_version = '2.5.1'
     def koin_version = '3.4.0'
-    implementation project(':presentation')
 
+    implementation project(':presentation')
     implementation project(':data')
     implementation project(':domain')
 
@@ -84,6 +84,9 @@ dependencies {
     implementation "io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+
+    // Koin for Tests
+    testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
