@@ -23,16 +23,9 @@ class NoteListViewModel(
 
     private fun loadNotes() {
         viewModelScope.launch {
-            Log.d("NoteListViewModel", "loading notes")
-            kotlin.runCatching {
-                noteRepository.getNotes().collectLatest { notes->
-                    Log.d("NoteListViewModel", "loadNotes: $notes")
+                noteRepository.getNotes().collect { notes->
                     _notes.value = notes
-
                 }
-            }.onFailure {
-                IllegalArgumentException("Error loading notes: $it")
-            }
         }
     }
 }
