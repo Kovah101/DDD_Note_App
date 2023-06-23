@@ -1,6 +1,7 @@
 package com.example.ui.notedetails
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.ChecklistItem
@@ -33,8 +34,14 @@ class NoteDetailViewModel(
     }
 
     fun onSaveClicked() {
-        viewModelScope.launch {
-            noteRepository.add(_note.value)
+        Log.d("Elliot", "onSaveClicked: note = ${note.value}")
+        if (note.value.isEmpty()){
+            Log.d("Elliot", "onSaveClicked: note is empty")
+            return
+        } else {
+            viewModelScope.launch {
+                noteRepository.add(_note.value)
+            }
         }
     }
 
@@ -45,6 +52,7 @@ class NoteDetailViewModel(
     }
 
     fun onBackClicked() {
+        Log.d("Elliot", "onBackClicked: ")
         onSaveClicked()
     }
 
@@ -92,4 +100,20 @@ class NoteDetailViewModel(
         val randomSuffix = Random.nextInt(1000)
         return (timestamp + randomSuffix).toInt()
     }
+
+    fun onCheckboxItemTextChanged(item: ChecklistItem, text: String) {
+        val updatedChecklist = _note.value.checklist.map { checklistItem ->
+            if (checklistItem.id == item.id) {
+                checklistItem.copy(text = text)
+            } else {
+                checklistItem
+            }
+        }
+        _note.value = _note.value.copy(checklist = updatedChecklist)
+    }
+
+    private fun Note.isEmpty(): Boolean {
+        return title.isEmpty() && content.isEmpty() && checklist.isEmpty() && imageUri.isNullOrEmpty()
+    }
 }
+

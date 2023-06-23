@@ -18,10 +18,8 @@ import org.koin.androidx.compose.get
 @Composable
 fun NoteApp(
     notesViewModel: NoteListViewModel,
-    noteDetailViewModel: NoteDetailViewModel,
     navController: NavHostController
 ) {
-//    val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.NoteList.route) {
         composable(Screen.NoteList.route) {
@@ -32,10 +30,9 @@ fun NoteApp(
             arguments = listOf(navArgument("noteId") { type = NavType.IntType })
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getInt("noteId") ?: 0
-           // val viewModel : NoteDetailViewModel = get()
-          //  viewModel.setNoteId(noteId)
-            noteDetailViewModel.setNoteId(noteId)
-            NoteDetailScreen(noteDetailViewModel, navController)
+            val viewModel : NoteDetailViewModel = get()
+            viewModel.setNoteId(noteId)
+            NoteDetailScreen(viewModel, navController)
         }
     }
 }

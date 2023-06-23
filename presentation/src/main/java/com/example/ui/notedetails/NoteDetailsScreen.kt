@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Checklist
@@ -39,6 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -46,6 +50,8 @@ import com.example.domain.models.ChecklistItem
 import com.example.domain.models.Note
 import com.example.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
+
+// TODO create remove image and checkbox item functionality
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,7 +71,7 @@ fun NoteDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Note Detail") },
+                title = { Text("Note Detail - Note #${note.id}") },
                 navigationIcon = {
                     IconButton(onClick = {
                         viewModel.onBackClicked()
@@ -85,7 +91,9 @@ fun NoteDetailScreen(
             )
         },
         content = {
-            Column(modifier = Modifier.padding(16.dp).padding(top = 64.dp)) {
+            Column(modifier = Modifier
+                .padding(16.dp)
+                .padding(top = 64.dp)) {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = note.title,
@@ -104,7 +112,12 @@ fun NoteDetailScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CheckboxList(note.checklist, viewModel::onCheckboxItemChanged)
+                CheckboxList(
+                    items = note.checklist,
+                    onItemChanged = viewModel::onCheckboxItemChanged,
+                    onCheckboxItemTextChanged = viewModel::onCheckboxItemTextChanged,
+                    imageAvailable = note.imageUri != null
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -119,77 +132,65 @@ fun NoteDetailScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { galleryLauncher.launch("image/*") }
-                ) {
-                    Text("Add Image")
-                }
             }
         },
         bottomBar = {
-            if (note.id == 0) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        viewModel.onSaveClicked()
-                        navController.navigate(Screen.NoteList.route)
+            BottomAppBar(
+                content = {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onDeleteClicked()
+                                navController.popBackStack()
+                            },
+                            content = {
+                                Icon(
+                                    Icons.Filled.Delete,
+                                    contentDescription = "Delete"
+                                )
+                            }
+                        )
+                        IconButton(
+                            onClick = { galleryLauncher.launch("image/*") },
+                            content = {
+                                Icon(
+                                    Icons.Filled.Photo,
+                                    contentDescription = "Add Image"
+                                )
+                            }
+                        )
+                        IconButton(
+                            onClick = { viewModel.onAddCheckboxItem() },
+                            content = {
+                                Icon(
+                                    Icons.Filled.Checklist,
+                                    contentDescription = "Add Checklist item"
+                                )
+                            }
+                        )
                     }
-                ) {
-                    Text("Save")
                 }
-            } else {
-                BottomAppBar(
-                    content = {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth().padding(8.dp)
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    viewModel.onDeleteClicked()
-                                    navController.popBackStack()
-                                          },
-                                content = {
-                                    Icon(
-                                        Icons.Filled.Delete,
-                                        contentDescription = "Delete"
-                                    )
-                                }
-                            )
-                            IconButton(
-                                onClick = { galleryLauncher.launch("image/*") },
-                                content = {
-                                    Icon(
-                                        Icons.Filled.Photo,
-                                        contentDescription = "Add Image"
-                                    )
-                                }
-                            )
-                            IconButton(
-                                onClick = { viewModel.onAddCheckboxItem() },
-                                content = {
-                                    Icon(
-                                        Icons.Filled.Checklist,
-                                        contentDescription = "Add Checklist item"
-                                    )
-                                }
-                            )
-                        }
-                    }
-                )
-            }
+            )
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckboxList(
     items: List<ChecklistItem>,
-    onItemChanged: (ChecklistItem) -> Unit
+    onItemChanged: (ChecklistItem) -> Unit,
+    onCheckboxItemTextChanged: (ChecklistItem, String) -> Unit,
+    imageAvailable: Boolean
 ) {
-    LazyColumn {
+    LazyColumn (
+        modifier = Modifier.fillMaxHeight(if (imageAvailable) 0.5f else 1f)
+    ) {
         items(items) { item ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -200,10 +201,12 @@ fun CheckboxList(
                     onCheckedChange = { onItemChanged(item.copy(isChecked = it)) },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                Text(
-                    text = item.text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(start = 8.dp)
+
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = item.text,
+                    onValueChange = { onCheckboxItemTextChanged(item, it) },
+                    label = { Text("item") }
                 )
             }
         }

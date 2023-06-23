@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
 
                 NoteApp(
                     notesViewModel = NoteListViewModel(get()),
-                    noteDetailViewModel = NoteDetailViewModel(get()),
                     navController = navController
                 )
             }

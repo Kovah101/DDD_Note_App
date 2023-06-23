@@ -23,7 +23,7 @@ data class Note(
             updatedAt = 0,
             isFavorite = false,
             isChecklist = false,
-            checklist = listOf(ChecklistItem.empty()),
+            checklist = emptyList(),
             imageUri = null
         )
     }
